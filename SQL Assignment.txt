@@ -1,0 +1,215 @@
+Q1)
+mysql> create table patient (name varchar(50),age int,gender varchar(50),city varchar(50),date_of_admission date,status varchar(50),patient_id int primary key);
+Query OK, 0 rows affected (0.10 sec)
+mysql> ALTER TABLE doctor
+    -> ADD COLUMN patient_id INT,
+    -> ADD CONSTRAINT fk_patient_id
+    -> FOREIGN KEY (patient_id)
+    -> REFERENCES patient(patient_id);
+Query OK, 5 rows affected (0.21 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+Output:
+
+mysql> desc patient;
++-------------------+-------------+------+-----+---------+-------+
+| Field             | Type        | Null | Key | Default | Extra |
++-------------------+-------------+------+-----+---------+-------+
+| name              | varchar(50) | YES  |     | NULL    |       |
+| age               | int         | YES  |     | NULL    |       |
+| gender            | varchar(50) | YES  |     | NULL    |       |
+| city              | varchar(50) | YES  |     | NULL    |       |
+| date_of_admission | date        | YES  |     | NULL    |       |
+| status            | varchar(50) | YES  |     | NULL    |       |
+| patient_id        | int         | NO   | PRI | NULL    |       |
++-------------------+-------------+------+-----+---------+-------+
+7 rows in set (0.01 sec)
+
+Q2)mysql> create table doctor(doctor_id int primary key,age int,gender varchar(50),city varchar(20),specialization varchar(50),years_of_experience int,salary int,);
+Query OK, 0 rows affected (0.10 sec)
+
+Output:
+
+mysql> desc doctor;
++---------------------+-------------+------+-----+---------+-------+
+| Field               | Type        | Null | Key | Default | Extra |
++---------------------+-------------+------+-----+---------+-------+
+| doctor_id           | int         | NO   | PRI | NULL    |       |
+| age                 | int         | YES  |     | NULL    |       |
+| gender              | varchar(50) | YES  |     | NULL    |       |
+| city                | varchar(20) | YES  |     | NULL    |       |
+| subject             | varchar(50) | YES  |     | NULL    |       |
+| years_of_experience | int         | YES  |     | NULL    |       |
+| salary              | int         | YES  |     | NULL    |       |
+| doctor_name         | varchar(50) | YES  |     | NULL    |       |
+| patient_id          | int         | YES  | MUL | NULL    |       |
++---------------------+-------------+------+-----+---------+-------+
+9 rows in set (0.01 sec)
+
+Q3)
+mysql> alter table doctor change column specialization subject varchar(50);
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+Output:
+
+mysql> select *from doctor;
++-----------+------+--------+-----------+---------+---------------------+--------+-------------+
+| doctor_id | age  | gender | city      | subject | years_of_experience | salary | doctor_name |
++-----------+------+--------+-----------+---------+---------------------+--------+-------------+
+|         1 |   21 | male   | Pune      | Heart   |                   5 |   2000 | Amit        |
+|         2 |   23 | female | Ahmedabad | Eyes    |                   6 |   3000 | Asmita      |
+|         3 |   23 | female | Mumbai    | Brain   |                   3 |   4000 | Amandeep    |
+|         4 |   26 | female | Mumbai    | Brain   |                   8 |   4000 | Shraddha    |
+|         5 |   26 | male   | Ahmedabad | Brain   |                   1 |   7000 | Himani      |
++-----------+------+--------+-----------+---------+---------------------+--------+-------------+
+5 rows in set (0.00 sec)
+
+Q4)
+mysql> create table bkup_patient as select * from patient;
+Query OK, 7 rows affected (0.07 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+Output:
+mysql> select *from bkup_patient;
++--------+------+--------+--------+-------------------+------------+------------+
+| name   | age  | gender | city   | date_of_admission | status     | patient_id |
++--------+------+--------+--------+-------------------+------------+------------+
+| Arpita |   21 | female | pune   | 2002-06-21        | discharged |          1 |
+| Aman   |   16 | male   | pune   | 2003-05-21        | admitted   |          2 |
+| Sarika |   18 | female | Mumbai | 2004-04-21        | admitted   |          3 |
+| Anmol  |   19 | female | Delhi  | 2005-05-22        | discharged |          4 |
+| Nilesh |   19 | male   | Mumbai | 2003-06-22        | admitted   |          5 |
+| Nilesh |   22 | male   | Pune   | 2003-07-22        | discharged |          6 |
+| Nikita |   22 | female | Pune   | 2008-07-26        | discharged |          7 |
++--------+------+--------+--------+-------------------+------------+------------+
+7 rows in set (0.00 sec)
+
+mysql> create table bkup_doctor as select * from doctor;
+Query OK, 5 rows affected (0.11 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+Output:
+
+mysql> select *from bkup_doctor;
++-----------+------+--------+-----------+---------+---------------------+--------+-------------+
+| doctor_id | age  | gender | city      | subject | years_of_experience | salary | doctor_name |
++-----------+------+--------+-----------+---------+---------------------+--------+-------------+
+|         1 |   21 | male   | Pune      | Heart   |                   5 |   2000 | Amit        |
+|         2 |   23 | female | Ahmedabad | Eyes    |                   6 |   3000 | Asmita      |
+|         3 |   23 | female | Mumbai    | Brain   |                   3 |   4000 | Amandeep    |
+|         4 |   26 | female | Mumbai    | Brain   |                   8 |   4000 | Shraddha    |
+|         5 |   26 | male   | Ahmedabad | Brain   |                   1 |   7000 | Himani      |
++-----------+------+--------+-----------+---------+---------------------+--------+-------------+
+5 rows in set (0.00 sec)
+
+Q5)
+mysql> select name from patient where city = 'Pune' OR city = 'Mumbai';
+
+Output:
+mysql> select name from patient where city = 'Pune' OR city = 'Mumbai';
++--------+
+| name   |
++--------+
+| Arpita |
+| Aman   |
+| Sarika |
+| Nilesh |
+| Nilesh |
+| Nikita |
++--------+
+6 rows in set (0.00 sec)
+
+
+Q6)
+mysql> select doctor_name,doctor_id from doctor where city ='Ahmedabad' AND doctor_name LIKE 'A%';
+
+Output:
+
++-------------+-----------+
+| doctor_name | doctor_id |
++-------------+-----------+
+| Asmita      |         2 |
++-------------+-----------+
+1 row in set (0.01 sec)
+
+Q7)
+mysql> select doctor_id,doctor_name,years_of_experience from doctor where years_of_experience>=4;
+
+Output:
++-----------+-------------+---------------------+
+| doctor_id | doctor_name | years_of_experience |
++-----------+-------------+---------------------+
+|         1 | Amit        |                   5 |
+|         2 | Asmita      |                   6 |
+|         4 | Shraddha    |                   8 |
++-----------+-------------+---------------------+
+3 rows in set (0.00 sec)
+
+Q8)
+mysql> select doctor_name,salary+1000 from doctor where years_of_experience > 5;
+
+Output:
+
++-------------+-------------+
+| doctor_name | salary+1000 |
++-------------+-------------+
+| Asmita      |        4000 |
+| Shraddha    |        5000 |
++-------------+-------------+
+2 rows in set (0.00 sec)
+
+Q9)
+
+mysql>select 'pune' AS city, COUNT(city) AS city_count from patient where city = 'pune';
+
+Output:
+
++------+------------+
+| city | city_count |
++------+------------+
+| pune |          4 |
++------+------------+
+1 row in set (0.00 sec)
+
+mysql> select 'mumbai' AS city, COUNT(city) AS city_count from patient where city = 'mumbai';
+
+Output:
+
+   
++--------+------------+
+| city   | city_count |
++--------+------------+
+| mumbai |          5 |
++--------+------------+
+1 row in set (0.00 sec)
+
+Q11)
+mysql> select patient_id,name from patient where status='discharged' join doctor on doctor.patient_id=patient.patient_id where years_of_experience>3;
+
+Output:
++--------+------------+
+| name   | patient_id |
++--------+------------+
+| Arpita |          1 |
+| Sarika |          3 |
+| Nilesh |          6 |
++--------+------------+
+7 rows in set (0.00 sec)
+Q12)
+
+mysql> create table backup_patient like patient;
+Query OK, 0 rows affected (0.09 sec)
+
+Q13)
+
+create table media_data (
+    media_id INT PRIMARY KEY AUTO_INCREMENT,
+    media_type ENUM('image', 'video') NOT NULL,
+    media_content LONGBLOB NOT NULL,
+    description VARCHAR(255)
+);
+
+Output:
+INSERT INTO media_data (media_type, media_content, description)
+VALUES ('image', LOAD_FILE(C:\Users\Coditas\Pictures\Screenshots), 'Description of the image');
+
